@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 
 @Controller
 public class FileUploadController {
@@ -20,16 +22,21 @@ public class FileUploadController {
     }
 
     @RequestMapping(value="/upload", method=RequestMethod.POST)
-    public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
+    public @ResponseBody String  handleFileUpload(@RequestParam("name") String name,
                                                  @RequestParam("file") MultipartFile file){
         if (!file.isEmpty()) {
             try {
-                byte[] bytes = file.getBytes();
-                BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(new File(name + "-uploaded")));
-                stream.write(bytes);
-                stream.close();
-                return "Вы удачно загрузили " + name + " в " + name + "-uploaded !";
+                Source xmlInput = new StreamSource((File) file);
+                Source xslInput = new StreamSource("auto.xsl");
+                TransformerFactory tFactory = TransformerFactory.newInstance();
+                Transformer transformer = tFactory.newTransformer();
+                File xslFile = new File("auto.xsl");
+                TransformerFactory factory = TransformerFactory.newInstance();
+                Templates xsl = factory.newTemplates(new StreamSource(xslFile));
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Result result = new StreamResult(baos);
+                transformer.transform(xmlInput, result);
+                return baos.toString();
             } catch (Exception e) {
                 return "Вам не удалось загрузить " + name + " => " + e.getMessage();
             }
