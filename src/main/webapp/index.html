@@ -1,33 +1,23 @@
-<!--<!Doctype html>
-<html lang="ru">
+<!Doctype html>
+<html lang="ru" xmlns="">
 <head>
     <meta charset = "UTF-8">
-    <title></title>
-
 </head>
 <body>
-
-<form align="center" name="form2">
-    <H1 align="center">Онлайн конвертер документов из XML в HTML</H1><link rel="stylesheet" href="new1.css">
-    <p> <input class="but2" type="file" name="file1" value=""> </p><br><br><br>
-    <div class="cssload-loader">Загрузка</div><br><br><br><br>
-
-    <input class="knopka" type="button" name="b1" value="Конвертировать">
-
-    <input class="but1" type="button" name="b1" value="Скачать" onclick="\upload">
-
-
-</form>
-
-</body>
-</html>-->
-<html>
-<body>
-<form method="POST" enctype="multipart/form-data"
-      action="/upload">
-    File to upload: <input type="file" name="file"><br /> Name: <input
-        type="text" name="name"><br /> <br /> <input type="submit"
-                                                     value="Upload"> Press here to upload the file!
+<form  method="POST" enctype="multipart/form-data"
+      action="/upload" align="center" name="form2">
+    <H1 align="center">Онлайн конвертер документов</H1>
+    <link rel="stylesheet" href="new1.css">
+    <br>
+    <div class="cssload-loader">из XML в HTML</div>
+    <br>
+    <br>
+    <br>
+    <img src="example.jpg"/>
+    <p> <input class="but2" type="file" name="file" > </p>
+   <br>
+    <input type="submit" class="knopka" value="Конвертировать">
+</div>
 </form>
 </body>
 </html>

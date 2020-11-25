@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.transform.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.InputStream;
 
 @Controller
 public class FileUploadController {
@@ -21,27 +22,25 @@ public class FileUploadController {
         return "Вы можете загружать файл с использованием того же URL.";
     }
 
-    @RequestMapping(value="/upload", method=RequestMethod.POST)
-    public @ResponseBody String  handleFileUpload(@RequestParam("name") String name,
-                                                 @RequestParam("file") MultipartFile file){
-        if (!file.isEmpty()) {
-            try {
-                Source xmlInput = new StreamSource((File) file);
-                Source xslInput = new StreamSource("auto.xsl");
-                TransformerFactory tFactory = TransformerFactory.newInstance();
-                Transformer transformer = tFactory.newTransformer();
-                File xslFile = new File("auto.xsl");
-                TransformerFactory factory = TransformerFactory.newInstance();
-                Templates xsl = factory.newTemplates(new StreamSource(xslFile));
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                Result result = new StreamResult(baos);
-                transformer.transform(xmlInput, result);
-                return baos.toString();
-            } catch (Exception e) {
-                return "Вам не удалось загрузить " + name + " => " + e.getMessage();
-            }
-        } else {
-            return "Вам не удалось загрузить " + name + " потому что файл пустой.";
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public @ResponseBody
+    String handleFileUpload(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Указан пустой файл");
+        }
+
+        try (final InputStream fis = file.getInputStream();
+             final InputStream xlsFileStream = getClass().getResourceAsStream("/auto.xsl");
+             final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+            final TransformerFactory factory = TransformerFactory.newInstance();
+            final Transformer transformer = factory.newTransformer(new StreamSource(xlsFileStream));
+            transformer.transform(new StreamSource(fis), new StreamResult(baos));
+
+            return baos.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Вам не удалось загрузить " + " => " + e.getMessage();
         }
     }
 

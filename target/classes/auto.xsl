@@ -14,8 +14,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       <th>Мощность</th>
     </tr>
     <xsl:for-each select="автомобили/автомобиль[цена&lt;'1500000']">
-    <xsl:sort select="модель"/>
-    <xsl:sort select="марка"/>
+      <xsl:sort select="марка"/>
+      <xsl:sort select="модель"/>
     <tr>
       <td><xsl:value-of select="марка"/></td>
       <td><xsl:value-of select="модель"/></td>
