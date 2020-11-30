@@ -2,7 +2,7 @@
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
   <html>
   <body>
-    <table border="8">
+    <table border="1" cellpadding="8" cellspacing="5">
     <tr>
       <th>Марка</th>
       <th>Модель</th>
@@ -21,7 +21,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       <td><xsl:value-of select="модель"/></td>
       <td><xsl:value-of select="цена"/></td>
       <td><xsl:value-of select="дата"/></td>
-      <td><xsl:value-of select="разгон"/></td>
+      <td><xsl:value-of select="translate(разгон, '.' ,',')"/></td>
       <td><xsl:value-of select="цвет"/></td>
       <td><xsl:value-of select="//автомобиль/@кузов"/></td>
       <td><xsl:value-of select="мощность"/></td>

@@ -17,11 +17,6 @@ import java.io.InputStream;
 @Controller
 public class FileUploadController {
 
-    @RequestMapping(value="/upload", method=RequestMethod.GET)
-    public @ResponseBody String provideUploadInfo() {
-        return "Вы можете загружать файл с использованием того же URL.";
-    }
-
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public @ResponseBody
     String handleFileUpload(@RequestParam("file") MultipartFile file) {
@@ -32,15 +27,13 @@ public class FileUploadController {
         try (final InputStream fis = file.getInputStream();
              final InputStream xlsFileStream = getClass().getResourceAsStream("/auto.xsl");
              final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-
             final TransformerFactory factory = TransformerFactory.newInstance();
             final Transformer transformer = factory.newTransformer(new StreamSource(xlsFileStream));
             transformer.transform(new StreamSource(fis), new StreamResult(baos));
-
             return baos.toString();
+            //baos.writeTo(new FileOutputStream("output.html"));
         } catch (Exception e) {
-            e.printStackTrace();
-            return "Вам не удалось загрузить " + " => " + e.getMessage();
+            return  "";
         }
     }
 
